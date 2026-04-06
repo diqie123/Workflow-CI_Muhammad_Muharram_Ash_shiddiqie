@@ -1,0 +1,37 @@
+name: MLflow CI Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  train-model:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mlflow==2.19.0 scikit-learn==1.5.2 pandas==2.2.3 numpy==1.26.4
+        
+    - name: Run MLflow Project
+      run: |
+        cd MLProject
+        mlflow run . --experiment-name wine_ci_experiment
+        
+    - name: Upload model artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: model-artifacts
+        path: mlruns/
