@@ -1,4 +1,4 @@
-name: wine-classification
+name: bank-marketing-classification
 channels:
   - conda-forge
   - defaults

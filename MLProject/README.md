@@ -1,13 +1,13 @@
-# MLProject - Wine Quality Classification
+# MLProject - Bank Marketing Classification
 
-MLflow Project untuk training model Wine Quality Classification dengan GitHub Actions CI/CD.
+MLflow Project untuk training model Bank Marketing Classification dengan GitHub Actions CI/CD.
 
 ## 📋 Deskripsi
 
-Project ini berisi pipeline lengkap untuk training model Random Forest Classifier menggunakan dataset Wine Quality dengan fitur:
+Project ini berisi pipeline lengkap untuk training model Random Forest Classifier menggunakan dataset Bank Marketing dengan fitur:
 
-- **Data Preprocessing**: StandardScaler untuk feature scaling
-- **Model Training**: RandomForestClassifier dengan hyperparameter tuning
+- **Data Preprocessing**: StandardScaler untuk feature scaling dan Label Encoding
+- **Model Training**: RandomForestClassifier untuk memprediksi apakah nasabah akan berlangganan deposito berjangka
 - **MLflow Integration**: Autologging untuk params, metrics, dan model artifacts
 - **CI/CD**: GitHub Actions workflow untuk automated re-training
 
@@ -18,14 +18,13 @@ MLProject/
 ├── MLProject              # MLflow Project configuration
 ├── conda.yaml            # Environment dependencies
 ├── modelling.py          # Training script dengan argparse
-├── wine_preprocessed/    # Dataset hasil preprocessing
+├── bank_preprocessed/    # Dataset hasil preprocessing
 │   ├── X_train.csv
 │   ├── X_test.csv
 │   ├── y_train.csv
 │   ├── y_test.csv
 │   ├── scaler.pkl
-│   ├── feature_columns.pkl
-│   └── label_encoder.pkl
+│   └── feature_columns.pkl
 └── README.md             # Dokumentasi ini
 ```
 
@@ -46,23 +45,10 @@ MLProject/
 ```powershell
 # Install dependencies
 conda env create -f conda.yaml
-conda activate wine-classification
+conda activate bank-marketing-classification
 
 # Jalankan training
-mlflow run . --experiment-name wine_quality_classification
-
-# Atau jalankan manual
-python modelling.py --n_estimators=100 --max_depth=10 --random_state=42
-```
-
-#### Bash
-```bash
-# Install dependencies
-conda env create -f conda.yaml
-conda activate wine-classification
-
-# Jalankan training
-mlflow run . --experiment-name wine_quality_classification
+mlflow run . --experiment-name bank_marketing_classification
 
 # Atau jalankan manual
 python modelling.py --n_estimators=100 --max_depth=10 --random_state=42
@@ -74,11 +60,6 @@ python modelling.py --n_estimators=100 --max_depth=10 --random_state=42
 
 #### PowerShell
 ```powershell
-mlflow ui --host 0.0.0.0 --port 8080
-```
-
-#### Bash
-```bash
 mlflow ui --host 0.0.0.0 --port 8080
 ```
 
@@ -97,8 +78,6 @@ Workflow otomatis berjalan saat push ke branch `main` atau `master`.
 4. Run MLflow Project (`mlflow run .`)
 5. Upload artifacts (mlruns/)
 
-**Cek status di:** [GitHub Actions](https://github.com/diqie123/Workflow-CI_Muhammad_Muharram_Ash_shiddiqie/actions)
-
 ---
 
 ## ⚙️ Konfigurasi
@@ -106,7 +85,7 @@ Workflow otomatis berjalan saat push ke branch `main` atau `master`.
 ### MLProject (Entry Point)
 
 ```yaml
-name: wine-classification
+name: bank-marketing-classification
 conda_env: conda.yaml
 
 entry_points:
@@ -121,7 +100,7 @@ entry_points:
 ### Environment Dependencies (conda.yaml)
 
 ```yaml
-name: wine-classification
+name: bank-marketing-classification
 channels:
   - conda-forge
   - defaults
@@ -142,11 +121,11 @@ dependencies:
 ## 📊 Model Details
 
 - **Algorithm**: RandomForestClassifier
-- **Dataset**: Wine Quality (UCI)
-- **Target**: Quality class (0: Low, 1: Medium, 2: High)
-- **Features**: 13 (scaled dengan StandardScaler)
+- **Dataset**: Bank Marketing (UCI)
+- **Target**: `y` (1: Yes, 0: No)
+- **Features**: 20 fitur (telemarketing data)
 - **Metrics**: Accuracy, F1-score, Precision, Recall
-- **Artifacts**: Model (joblib), Confusion Matrix, Feature Importance
+- **Artifacts**: Model (joblib/mlflow), Classification Report, Metrics
 
 ---
 
@@ -163,9 +142,9 @@ dependencies:
 ## 📈 Metrics
 
 - **accuracy**: Model accuracy pada test set
-- **classification_report**: Precision, recall, F1-score per class
-- **confusion_matrix**: Visualisasi prediksi vs actual
-- **feature_importance**: Top 10 feature importance plot
+- **test_accuracy**: Manual log accuracy
+- **test_precision**: Manual log precision
+- **test_f1_score**: Manual log F1-score
 
 ---
 
@@ -177,17 +156,17 @@ dependencies:
 - Manual trigger (workflow_dispatch)
 
 **Output:**
-- MLflow experiment: `wine_quality_classification`
-- Run name: `ci_rf_model`
+- MLflow experiment: `bank_marketing_classification`
+- Run name: `ci_bank_marketing_model`
 - Artifacts: `mlruns/` (upload ke GitHub Actions)
 
 ---
 
 ## 📝 Catatan
 
-1. **Data**: Pastikan `wine_preprocessed/` sudah ada sebelum training.
+1. **Data**: Pastikan `bank_preprocessed/` sudah ada sebelum training.
 2. **MLflow**: Autologging aktif (`mlflow.sklearn.autolog()`).
-3. **Artifacts**: Model disimpan sebagai `model.pkl` di MLflow.
+3. **Artifacts**: Model disimpan di folder `model/` dalam run MLflow.
 
 ---
 
