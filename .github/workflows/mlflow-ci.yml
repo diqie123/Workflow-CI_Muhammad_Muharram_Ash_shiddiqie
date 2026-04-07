@@ -1,4 +1,4 @@
-name: MLflow CI
+name: MLflow CI - Bank Marketing
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.12'
+        python-version: '3.11'
 
     - name: Install dependencies
       run: |
@@ -28,7 +28,7 @@ jobs:
     - name: Run MLflow Project
       run: |
         cd MLProject
-        mlflow run . --experiment-name wine_quality_classification
+        mlflow run . --experiment-name bank_marketing_classification --env-manager=local
 
     - name: Upload MLflow artifacts
       uses: actions/upload-artifact@v4
